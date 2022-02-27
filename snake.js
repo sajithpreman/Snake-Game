@@ -6,6 +6,10 @@ var sPosx = 80;
 var sPosy = 80;
 var nPosy = 0;
 var nPosx = 0;
+var snakeTail = [];
+var snakeSize = 1;
+var score = 0;
+var GameStatus = "Ready";
 
 //fruit
 var fPosx = 140;
@@ -13,12 +17,15 @@ var fPosy = 140;
 // onload function
 window.onload = function () {
   addEventListener("keydown", inputControl);
-  setInterval(mainGame, 200);
+
+  game = setInterval(mainGame, 300);
 };
 
 // main game function
 
 function mainGame() {
+  document.getElementById("Game-Status").innerHTML = GameStatus;
+  document.getElementById("score").innerHTML = score;
   //move snake
   sPosx += nPosx;
   sPosy += nPosy;
@@ -62,7 +69,14 @@ function mainGame() {
 
   //snake
   cvs.fillStyle = "yellow";
-  cvs.fillRect(sPosx, sPosy, 20, 20);
+  for (var i = 0; i < snakeTail.length; i++) {
+    cvs.fillRect(snakeTail[i].x, snakeTail[i].y, 20, 20);
+    // if snake eats its tail
+    if (sPosx == snakeTail[i].x && sPosy == snakeTail[i].y && snakeSize > 1) {
+      clearInterval(game);
+      GameStatus = "GameOver";
+    }
+  }
 
   //fruit
 
@@ -71,8 +85,15 @@ function mainGame() {
 
   // if snake eat fruit
   if (sPosx == fPosx && sPosy == fPosy) {
+    snakeSize++;
+    score += 10;
     fPosx = Math.floor(Math.random() * 20) * 20;
     fPosy = Math.floor(Math.random() * 20) * 20;
+  }
+
+  snakeTail.push({ x: sPosx, y: sPosy });
+  while (snakeTail.length > snakeSize) {
+    snakeTail.shift();
   }
 }
 
@@ -105,5 +126,13 @@ function inputControl(e) {
       nPosy += 20;
       nPosx = 0;
       break;
+  }
+  if (
+    e.keyCode == 37 ||
+    e.keyCode == 38 ||
+    e.keyCode == 39 ||
+    e.keyCode == 40
+  ) {
+    GameStatus = "Game started";
   }
 }

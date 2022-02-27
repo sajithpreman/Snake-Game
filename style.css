@@ -3,3 +3,8 @@ h2,
 .game-canvas {
   text-align: center;
 }
+
+#score,
+#Game-Status {
+  color: red;
+}
