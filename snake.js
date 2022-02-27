@@ -1,9 +1,15 @@
 // variable diclaration
 
 var cvs = document.getElementById("canvas").getContext("2d");
-var sposx = 80;
-var sposy = 80;
+//snake
+var sPosx = 80;
+var sPosy = 80;
+var nPosy = 0;
+var nPosx = 0;
 
+//fruit
+var fPosx = 140;
+var fPosy = 140;
 // onload function
 window.onload = function () {
   addEventListener("keydown", inputControl);
@@ -13,6 +19,24 @@ window.onload = function () {
 // main game function
 
 function mainGame() {
+  //move snake
+  sPosx += nPosx;
+  sPosy += nPosy;
+
+  //snake in frame
+  if (sPosx > 400) {
+    sPosx = 0;
+  }
+  if (sPosy > 400) {
+    sPosy = 0;
+  }
+  if (sPosx < 0) {
+    sPosx = 400;
+  }
+  if (sPosy < 0) {
+    sPosy = 400;
+  }
+
   //game area
 
   //bg-color
@@ -38,12 +62,18 @@ function mainGame() {
 
   //snake
   cvs.fillStyle = "yellow";
-  cvs.fillRect(sposx, sposy, 20, 20);
+  cvs.fillRect(sPosx, sPosy, 20, 20);
 
   //fruit
 
   cvs.fillStyle = "red";
-  cvs.fillRect(140, 140, 20, 20);
+  cvs.fillRect(fPosx, fPosy, 20, 20);
+
+  // if snake eat fruit
+  if (sPosx == fPosx && sPosy == fPosy) {
+    fPosx = Math.floor(Math.random() * 20) * 20;
+    fPosy = Math.floor(Math.random() * 20) * 20;
+  }
 }
 
 //input controll
@@ -54,22 +84,26 @@ function inputControl(e) {
   switch (e.keyCode) {
     case 37:
       //left
-      sposx -= 20;
+      nPosx -= 20;
+      nPosy = 0;
       break;
 
     case 39:
       //right
-      sposx += 20;
+      nPosx += 20;
+      nPosy = 0;
       break;
 
     case 38:
       //up
-      sposy -= 20;
+      nPosy -= 20;
+      nPosx = 0;
       break;
 
     case 40:
       //down
-      sposy += 20;
+      nPosy += 20;
+      nPosx = 0;
       break;
   }
 }
